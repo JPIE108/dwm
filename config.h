@@ -1,13 +1,20 @@
 /* See LICENSE file for copyright and license details. */
-
+#include <X11/XF86keysym.h>
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const unsigned int gappx	    = 20;
+static const unsigned int gappx	    = 30;
 static const char *fonts[]          = { "Jet Brains Mono:size=10" };
 static const char dmenufont[]       = "Jet Brains Mono:size=10";
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+static const char *skip[] = {"/usr/bin/playerctl", "next", NULL};
+static const char *play_pause[] = {"/usr/bin/playerctl", "play-pause", NULL};
+static const char *back[] = {"/usr/bin/playerctl", "previous", NULL};
+static const char *stop[] = {"/usr/bin/playerctl", "stop", NULL};
 static const char col_gray1[]       = "#060c24";
 static const char col_gray2[]       = "#406fba";
 static const char col_gray3[]       = "#569dc2";
@@ -62,10 +69,18 @@ static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ 0,                       XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
+	{ 0,                       XF86XK_AudioMute, spawn, {.v = mutevol } },
+	{ 0,                       XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
+	{ 0,			   XF86XK_AudioNext, spawn, {.v = skip } },
+	{ 0,			   XF86XK_AudioPrev, spawn, {.v = back  } },
+	{ 0,			   XF86XK_AudioPlay, spawn, {.v = play_pause } },
+	{ 0, 			   XF86XK_AudioStop, spawn, {.v = stop } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY|ShiftMask,		XK_e,	   quit,	   {0} },
+	{ MODKEY|ShiftMask,		XK_h,	   zoom,	   {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
